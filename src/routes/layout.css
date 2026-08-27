@@ -36,7 +36,7 @@ p {
 	line-height: 1.5;
 }
 
-@font-face { font-family: 'Ms-sans-serif-1'; src: url('ms-sans-serif-1.ttf'); }
+@font-face { font-family: 'Ms-sans-serif-1'; src: url('/ms-sans-serif-1.ttf'); }
 
 a {
 	font-family: 'Ms-sans-serif-1', sans-serif;
