@@ -159,7 +159,7 @@
 			display: flex;
 		}
 		.middle {
-			background-image: url('bgcenter-mobile.png');
+			background-image: url('/bgcenter-mobile.png');
 		}
 		.address {
 			top: 10%;
