@@ -30,6 +30,7 @@
 <style>
 	.text-column {
 		margin-top: 7vh;
+		padding: 0 5%;
 	}
 
 	h1 {
