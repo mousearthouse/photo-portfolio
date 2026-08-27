@@ -124,7 +124,7 @@
 	.middle {
 		flex: 1;
 		pointer-events: none;
-		background-image: url('bgcenter.png');
+		background-image: url('/bgcenter.png');
 		background-repeat: repeat-y;
 		background-size: 100% 100%;
 	}
