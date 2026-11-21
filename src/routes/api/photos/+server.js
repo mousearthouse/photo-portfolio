@@ -1,66 +1,88 @@
 import { json } from '@sveltejs/kit';
-import { readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
-const PHOTOS_DIR = path.resolve('static/photos');
+const PHOTOS_DIR = '/photos';
 
 const ALLOWED_EXTENSIONS = new Set([
-    '.jpg',
-    '.jpeg',
-    '.png',
-    '.webp',
-    '.avif'
+	'.jpg',
+	'.jpeg',
+	'.png',
+	'.webp',
+	'.avif'
 ]);
 
+async function getOrder(categoryPath) {
+	const orderPath = path.join(categoryPath, 'order.txt');
+
+	try {
+		const content = await readFile(orderPath, 'utf-8');
+		return content
+			.split('\n')
+			.map((line) => line.trim())
+			.filter(Boolean);
+	} catch {
+		return [];
+	}
+}
+
 export async function GET() {
-    const categories = await readdir(PHOTOS_DIR, {
-        withFileTypes: true
-    });
+	const categories = await readdir(PHOTOS_DIR, { withFileTypes: true });
 
-    const result = {};
+	const result = {};
 
-    for (const category of categories) {
-        if (!category.isDirectory()) {
-            continue;
-        }
+	for (const category of categories) {
+		if (!category.isDirectory()) continue;
 
-        const categoryPath = path.join(
-            PHOTOS_DIR,
-            category.name
-        );
+		const categoryPath = path.join(PHOTOS_DIR, category.name);
+		const shootings = await readdir(categoryPath, { withFileTypes: true });
 
-        const files = await readdir(categoryPath);
+		const shootingDirs = shootings
+			.filter((s) => s.isDirectory())
+			.map((s) => s.name);
 
-        const imageFiles = files
-    .filter((file) => {
-        const extension = path.extname(file).toLowerCase();
+		const order = await getOrder(categoryPath);
 
-        return ALLOWED_EXTENSIONS.has(extension);
-    })
-    .sort();
+		const ordered = [
+			...order.filter((name) => shootingDirs.includes(name)),
+			...shootingDirs
+				.filter((name) => !order.includes(name))
+				.sort((a, b) => a.localeCompare(b))
+		];
 
-    result[category.name] = await Promise.all(
-        imageFiles.map(async (file) => {
-            const filePath = path.join(categoryPath, file);
+		result[category.name] = {};
 
-            const metadata = await sharp(filePath).metadata();
+		for (const shootingName of ordered) {
+			const shootingPath = path.join(categoryPath, shootingName);
+			const files = await readdir(shootingPath);
 
-            const orientation =
-                metadata.width > metadata.height
-                    ? 'horizontal'
-                    : 'vertical';
+			const imageFiles = files
+				.filter((file) => {
+					const ext = path.extname(file).toLowerCase();
+					return ALLOWED_EXTENSIONS.has(ext);
+				})
+				.sort();
 
-            return {
-                name: file,
-                url: `/photos/${category.name}/${file}`,
-                orientation,
-                width: metadata.width,
-                height: metadata.height
-            };
-        })
-    );
-    }
+			result[category.name][shootingName] = await Promise.all(
+				imageFiles.map(async (file) => {
+					const filePath = path.join(shootingPath, file);
+					const metadata = await sharp(filePath).metadata();
 
-    return json(result);
+					const orientation =
+						metadata.width > metadata.height ? 'horizontal' : 'vertical';
+
+					return {
+						name: file,
+						url: `/photos/${category.name}/${shootingName}/${file}`,
+						orientation,
+						width: metadata.width,
+						height: metadata.height
+					};
+				})
+			);
+		}
+	}
+
+	return json(result);
 }

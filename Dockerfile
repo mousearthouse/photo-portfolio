@@ -8,9 +8,6 @@ RUN npm ci
 
 COPY photo-portfolio/ .
 
-COPY photos ./static/photos
-COPY decorations ./static/decorations
-
 RUN npm run build
 
 ENV NODE_ENV=production
