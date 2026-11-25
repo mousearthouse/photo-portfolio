@@ -21,7 +21,8 @@
 	<main>
 		{@render children()}
 	</main>
-	<div class="fixed-element">
+	<!-- рамочка интернет эксплорера -->
+	<!-- <div class="fixed-element">
 		<div class="top">
 			<picture>
 				<source media="(max-width: 768px)" srcset="bgtop-mobile.png" />
@@ -42,6 +43,17 @@
 			<source media="(max-width: 768px)" srcset="bgbottom-mobile.png" />
 			<img class="bottom" src="bgbottom.png" alt="" />
 		</picture>
+	</div> -->
+
+	<div class="fixed-element">
+		<div class="top">
+			<nav>
+				<a href="/">главная</a>
+				<a href="/about">обо мне</a>
+				<a href="/photos">портфолио</a>
+			</nav>
+
+		</div>
 	</div>
 
 	<footer>
@@ -68,9 +80,10 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		
+		align-items: center;
+
 		width: 100%;
-		max-width: 64rem;
+		/* max-width: 64rem; */
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
@@ -112,12 +125,20 @@
 			font-size: 1.5rem;
 		}
 	}
-
-	nav {
+	/* для рамочки */
+	/* nav {
 		position: absolute;
 		display: flex;
 		top: 55%;
 		left: 3vw;
+		gap: 2vw;
+	} */
+
+	nav {
+		position: absolute;
+		display: flex;
+		top: 2vh;
+		right: 3vw;
 		gap: 2vw;
 	}
 
@@ -146,7 +167,7 @@
 		justify-content: center;
 		align-items: center;
 		padding: 12px;
-		margin-bottom: 8vh;
+		margin-bottom: 3vh;
 	}
 
 	footer a {

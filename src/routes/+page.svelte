@@ -8,24 +8,46 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
+<section class="welcome">
 	<h1>
 		print8creen<br />photos
 	</h1>
-
+</section>
+<section class="text-block">
+	<img src="/profile_icon.png" alt="profile_icon"/>
+	<p>Меня зовут Полина, я фотограф в Сибири, специализируюсь на репортажной и портретной съемке. Снимаю мероприятия, концерты, индивидуальные и творческие проекты.</p>
 </section>
 
 <style>
-	section {
+	.welcome {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		height: 70vh;
+		min-height: 100vh;
+		width: 100vw;
+		background-image: url('/bg.JPEG');
+		background-size: cover;
+	}
+
+	.text-block {
+		width: 50%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		padding: 0 5vh;
+
+		img {
+			height: 50%;
+			width: 50%;
+			margin: 0 5vh;
+		}
 	}
 
 	h1 {
 		width: 100%;
-		font-family: 'Ms-sans-serif-1';
+		font-family: 'Ari';
+		color: rgb(255, 255, 255);
 	}
 </style>

@@ -37,11 +37,12 @@ p {
 }
 
 @font-face { font-family: 'Ms-sans-serif-1'; src: url('/ms-sans-serif-1.ttf'); }
+@font-face { font-family: 'Ari'; src: url('/ari-w9500.otf.woff2'); }
 
 a {
-	font-family: 'Ms-sans-serif-1', sans-serif;
+	font-family: 'Ari', sans-serif;
 	text-decoration: none;
-	color: black;
+	color: rgb(255, 239, 239);
 	font-size: 1.25rem;
 }
 
