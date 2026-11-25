@@ -72,30 +72,38 @@
         </div>
 
         <div class="gallery">
-            {#each createRows(photos[selectedCategory] ?? []) as row}
-                <div
-                    class:single={row.length === 1}
-                    class:vertical-single={
-                        row.length === 1 &&
-                        row[0].width < row[0].height
-                    }
-                    class="photo-row"
-                >
-                    {#each row as photo}
+        {#each Object.entries(photos[selectedCategory] ?? {}) as [shootingName, shootingPhotos]}
+            <section class="shooting">
+                <h2>{shootingName}</h2>
+
+                <div class="shooting-gallery">
+                    {#each createRows(shootingPhotos) as row}
                         <div
-                            class="photo"
-                            style={`flex: ${photo.width / photo.height} 1 0`}
+                            class:single={row.length === 1}
+                            class:vertical-single={
+                                row.length === 1 &&
+                                row[0].width < row[0].height
+                            }
+                            class="photo-row"
                         >
-                            <img
-                                src={photo.url}
-                                alt={photo.name}
-                                loading="lazy"
-                            />
+                            {#each row as photo}
+                                <div
+                                    class="photo"
+                                    style={`flex: ${photo.width / photo.height} 1 0`}
+                                >
+                                    <img
+                                        src={photo.url}
+                                        alt={photo.name}
+                                        loading="lazy"
+                                    />
+                                </div>
+                            {/each}
                         </div>
                     {/each}
                 </div>
-            {/each}
-        </div>
+            </section>
+        {/each}
+    </div>
 </main>
 
 <style>
