@@ -6,26 +6,6 @@
     let error = $state(null);
     let selectedCategory = $state('');
 
-    function createRows(photos) {
-        const rows = [];
-
-        for (let i = 0; i < photos.length; i++) {
-            const photo = photos[i];
-
-            if (
-                photo.width < photo.height &&
-                photos[i + 1]?.width < photos[i + 1]?.height
-            ) {
-                rows.push([photo, photos[i + 1]]);
-                i++;
-            } else {
-                rows.push([photo]);
-            }
-        }
-
-        return rows;
-    }
-
     onMount(async () => {
         try {
             const response = await fetch('/api/photos');
@@ -41,9 +21,6 @@
             if (categories.length > 0) {
                 selectedCategory = categories[0];
             }
-
-            console.log('Photos:', photos);
-            console.log('Selected category:', selectedCategory);
         } catch (e) {
             console.error(e);
             error = e.message;
@@ -54,12 +31,17 @@
 </script>
 
 <svelte:head>
-    <title>portfolio</title>
+    <title>Photos — portfolio</title>
 </svelte:head>
 
 <main>
-    <h1>portfolio</h1>
+    <h1>photos</h1>
 
+    {#if loading}
+        <p>Loading...</p>
+    {:else if error}
+        <p>Error: {error}</p>
+    {:else}
         <div class="categories">
             {#each Object.keys(photos) as category}
                 <button
@@ -71,49 +53,47 @@
             {/each}
         </div>
 
-        <div class="gallery">
-        {#each Object.entries(photos[selectedCategory] ?? {}) as [shootingName, shootingPhotos]}
-            <section class="shooting">
-                <h2>{shootingName}</h2>
-
-                <div class="shooting-gallery">
-                    {#each createRows(shootingPhotos) as row}
-                        <div
-                            class:single={row.length === 1}
-                            class:vertical-single={
-                                row.length === 1 &&
-                                row[0].width < row[0].height
-                            }
-                            class="photo-row"
-                        >
-                            {#each row as photo}
-                                <div
-                                    class="photo"
-                                    style={`flex: ${photo.width / photo.height} 1 0`}
-                                >
-                                    <img
-                                        src={photo.url}
-                                        alt={photo.name}
-                                        loading="lazy"
-                                    />
-                                </div>
-                            {/each}
+        <div class="shootings">
+            {#each Object.entries(photos[selectedCategory] ?? {}) as [shootingName, shootingPhotos]}
+                <a
+                    class="shooting-card"
+                    href={`/photos/${encodeURIComponent(selectedCategory)}/${encodeURIComponent(shootingName)}`}
+                >
+                    {#if shootingPhotos.length > 0}
+                        <div class="cover">
+                            <img
+                                src={shootingPhotos[0].url}
+                                alt={shootingName}
+                                loading="lazy"
+                            />
                         </div>
-                    {/each}
-                </div>
-            </section>
-        {/each}
-    </div>
+                    {:else}
+                        <div class="cover empty">
+                            No photos
+                        </div>
+                    {/if}
+
+                    <div class="shooting-info">
+                        <h2>{shootingName}</h2>
+                        <span>{shootingPhotos.length} photos</span>
+                    </div>
+                </a>
+            {/each}
+        </div>
+    {/if}
 </main>
 
 <style>
     main {
         max-width: 1600px;
-        margin: 0 auto;
+        margin: 5vh auto 0;
         padding: 40px;
-        margin-top: 5vh;
         display: flex;
         flex-direction: column;
+    }
+
+    h1 {
+        font-family: 'Ms-sans-serif-1';
     }
 
     .categories {
@@ -133,45 +113,80 @@
 
     button.active {
         background: rgb(64, 115, 255);
-        color: rgb(255, 255, 255);
+        color: white;
     }
 
-    .gallery {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    .shootings {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
     }
 
-    .photo-row {
-        display: flex;
-        gap: 12px;
-    }
-
-    .photo {
+    .shooting-card {
+        display: block;
+        color: inherit;
+        text-decoration: none;
         min-width: 0;
     }
 
-    .photo img {
-        display: block;
+    .cover {
         width: 100%;
-        height: auto;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: #eee;
     }
 
-    .photo p {
-        margin-top: 5px;
+    .cover img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .shooting-card:hover .cover img {
+        transform: scale(1.03);
+    }
+
+    .shooting-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .shooting-info h2 {
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0;
+    }
+
+    .shooting-info span {
         font-size: 12px;
+        opacity: 0.6;
+        white-space: nowrap;
+    }
+
+    .empty {
+        display: grid;
+        place-items: center;
+        color: #777;
+    }
+
+    @media (max-width: 900px) {
+        .shootings {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
     @media (max-width: 700px) {
-        .gallery {
-            grid-template-columns: repeat(2, 1fr);
-        }
         main {
-            padding: 5px;
+            padding: 15px;
         }
-    }
 
-    h1 {
-        font-family: 'Ms-sans-serif-1';
+        .shootings {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
