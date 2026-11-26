@@ -17,7 +17,6 @@
                 continue;
             }
 
-            // Ищем следующую ещё не использованную вертикальную фотографию
             let pairIndex = -1;
 
             for (let j = i + 1; j < photos.length; j++) {
@@ -57,32 +56,33 @@
     </nav>
 
     <h1>{data.shooting.title}</h1>
-
-    <div class="gallery" data-header-theme="light">
-        {#each createRows(data.photos) as row}
-            <div
-                class="photo-row"
-                class:double={row.length === 2}
-                class:single={row.length === 1}
-                class:vertical-single={
-                    row.length === 1 &&
-                    row[0].width < row[0].height
-                }
-            >
-                {#each row as photo}
-                    <div
-                        class="photo"
-                        style={`flex: ${photo.width / photo.height} 1 0`}
-                    >
-                        <img
-                            src={photo.url}
-                            alt={photo.name}
-                            loading="lazy"
-                        />
-                    </div>
-                {/each}
-            </div>
-        {/each}
+    <div class="container">
+        <div class="gallery" data-header-theme="light">
+            {#each createRows(data.photos) as row}
+                <div
+                    class="photo-row"
+                    class:double={row.length === 2}
+                    class:single={row.length === 1}
+                    class:vertical-single={
+                        row.length === 1 &&
+                        row[0].width < row[0].height
+                    }
+                >
+                    {#each row as photo}
+                        <div
+                            class="photo"
+                            style={`flex: ${photo.width / photo.height} 1 0`}
+                        >
+                            <img
+                                src={photo.url}
+                                alt={photo.name}
+                                loading="lazy"
+                            />
+                        </div>
+                    {/each}
+                </div>
+            {/each}
+        </div>
     </div>
 </main>
 
@@ -118,7 +118,11 @@
         font-family: 'Ms-sans-serif-1';
         margin-bottom: 30px;
     }
-
+    .container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
     .gallery {
         width: 60%;
         display: flex;
