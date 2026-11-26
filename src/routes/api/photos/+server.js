@@ -1,88 +1,83 @@
 import { json } from '@sveltejs/kit';
-import { readdir, readFile } from 'node:fs/promises';
+import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
 const PHOTOS_DIR = '/photos';
+const CONFIG_PATH = path.join(PHOTOS_DIR, 'shootings.json');
 
 const ALLOWED_EXTENSIONS = new Set([
-	'.jpg',
-	'.jpeg',
-	'.png',
-	'.webp',
-	'.avif'
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.webp',
+    '.avif'
 ]);
 
-async function getOrder(categoryPath) {
-	const orderPath = path.join(categoryPath, 'order.txt');
-
-	try {
-		const content = await readFile(orderPath, 'utf-8');
-		return content
-			.split('\n')
-			.map((line) => line.trim())
-			.filter(Boolean);
-	} catch {
-		return [];
-	}
-}
-
 export async function GET() {
-	const categories = await readdir(PHOTOS_DIR, { withFileTypes: true });
+    try {
+        const config = JSON.parse(
+            await (await import('node:fs/promises'))
+                .readFile(CONFIG_PATH, 'utf-8')
+        );
 
-	const result = {};
+        const result = {};
 
-	for (const category of categories) {
-		if (!category.isDirectory()) continue;
+        for (const [categorySlug, category] of Object.entries(config)) {
+            const categoryPath = path.join(PHOTOS_DIR, categorySlug);
 
-		const categoryPath = path.join(PHOTOS_DIR, category.name);
-		const shootings = await readdir(categoryPath, { withFileTypes: true });
+            result[categorySlug] = {
+                title: category.title,
+                shootings: {}
+            };
 
-		const shootingDirs = shootings
-			.filter((s) => s.isDirectory())
-			.map((s) => s.name);
+            for (const [shootingSlug, shooting] of Object.entries(category.shootings)) {
+                const shootingPath = path.join(
+                    categoryPath,
+                    shooting.folder
+                );
 
-		const order = await getOrder(categoryPath);
+                const files = await readdir(shootingPath);
 
-		const ordered = [
-			...order.filter((name) => shootingDirs.includes(name)),
-			...shootingDirs
-				.filter((name) => !order.includes(name))
-				.sort((a, b) => a.localeCompare(b))
-		];
+                const imageFiles = files
+                    .filter(file =>
+                        ALLOWED_EXTENSIONS.has(
+                            path.extname(file).toLowerCase()
+                        )
+                    )
+                    .sort((a, b) => a.localeCompare(b));
 
-		result[category.name] = {};
+                const photos = await Promise.all(
+                    imageFiles.map(async file => {
+                        const filePath = path.join(shootingPath, file);
+                        const metadata = await sharp(filePath).metadata();
 
-		for (const shootingName of ordered) {
-			const shootingPath = path.join(categoryPath, shootingName);
-			const files = await readdir(shootingPath);
+                        return {
+                            name: file,
+                            url: `/photos/${categorySlug}/${encodeURIComponent(shooting.folder)}/${encodeURIComponent(file)}`,
+                            width: metadata.width,
+                            height: metadata.height
+                        };
+                    })
+                );
 
-			const imageFiles = files
-				.filter((file) => {
-					const ext = path.extname(file).toLowerCase();
-					return ALLOWED_EXTENSIONS.has(ext);
-				})
-				.sort();
+                const cover = shooting.cover;
 
-			result[category.name][shootingName] = await Promise.all(
-				imageFiles.map(async (file) => {
-					const filePath = path.join(shootingPath, file);
-					const metadata = await sharp(filePath).metadata();
+                result[categorySlug].shootings[shootingSlug] = {
+                    title: shooting.title,
+                    cover: photos.find(photo => photo.name === cover) ?? photos[0] ?? null,
+                    photos
+                };
+            }
+        }
 
-					const orientation =
-						metadata.width > metadata.height ? 'horizontal' : 'vertical';
+        return json(result);
 
-					return {
-						name: file,
-						url: `/photos/${category.name}/${shootingName}/${file}`,
-						orientation,
-						width: metadata.width,
-						height: metadata.height
-					};
-				})
-			);
-		}
-	}
-
-	return json(result);
+    } catch (error) {
+        console.error('Photos API error:', error);
+        return json(
+            { error: 'Failed to load photos' },
+            { status: 500 }
+        );
+    }
 }

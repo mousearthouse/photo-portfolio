@@ -7,18 +7,15 @@ export async function load({ fetch, params }) {
         throw error(500, 'Failed to load photos');
     }
 
-    const allPhotos = await response.json();
+    const shooting = allPhotos[params.category]?.shootings?.[params.shooting];
 
-    const shootingPhotos =
-        allPhotos[params.category]?.[params.shooting];
-
-    if (!shootingPhotos) {
+    if (!shooting) {
         throw error(404, 'Shooting not found');
     }
 
     return {
         category: params.category,
-        shooting: params.shooting,
-        photos: shootingPhotos
+        shooting: shooting.title,
+        photos: shooting.photos
     };
 }

@@ -42,41 +42,31 @@
     {:else if error}
         <p>Error: {error}</p>
     {:else}
-        <div class="categories">
-            {#each Object.keys(photos) as category}
-                <button
-                    class:active={selectedCategory === category}
-                    onclick={() => selectedCategory = category}
-                >
-                    {category}
-                </button>
-            {/each}
-        </div>
-
+        {#each Object.entries(photos) as [slug, category]}
+            <button
+                class:active={selectedCategory === slug}
+                onclick={() => selectedCategory = slug}
+            >
+                {category.title}
+            </button>
+        {/each}
         <div class="shootings">
-            {#each Object.entries(photos[selectedCategory] ?? {}) as [shootingName, shootingPhotos]}
+            {#each Object.entries(photos[selectedCategory]?.shootings ?? {}) as [slug, shooting]}
                 <a
+                    href={`/photos/${selectedCategory}/${slug}`}
                     class="shooting-card"
-                    href={`/photos/${encodeURIComponent(selectedCategory)}/${encodeURIComponent(shootingName)}`}
                 >
-                    {#if shootingPhotos.length > 0}
+                    {#if shooting.cover}
                         <div class="cover">
                             <img
-                                src={shootingPhotos[0].url}
-                                alt={shootingName}
-                                loading="lazy"
+                                src={shooting.cover.url}
+                                alt={shooting.title}
                             />
-                        </div>
-                    {:else}
-                        <div class="cover empty">
-                            No photos
                         </div>
                     {/if}
 
-                    <div class="shooting-info">
-                        <h2>{shootingName}</h2>
-                        <span>{shootingPhotos.length} photos</span>
-                    </div>
+                    <h2>{shooting.title}</h2>
+                    <span>{shooting.photos.length} photos</span>
                 </a>
             {/each}
         </div>
