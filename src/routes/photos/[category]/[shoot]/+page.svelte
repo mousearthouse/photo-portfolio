@@ -23,16 +23,18 @@
 </script>
 
 <svelte:head>
-    <title>{data.shooting} — portfolio</title>
+    <title>{data.shooting.title} — portfolio</title>
 </svelte:head>
 
 <main>
     <nav>
         <a href="/photos">← all photos</a>
-        <span>{data.category} / {data.shooting}</span>
+        <span>
+            {data.category.title} / {data.shooting.title}
+        </span>
     </nav>
 
-    <h1>{data.shooting}</h1>
+    <h1>{data.shooting.title}</h1>
 
     <div class="gallery">
         {#each createRows(data.photos) as row}

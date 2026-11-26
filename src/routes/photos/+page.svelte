@@ -1,3 +1,4 @@
+
 <script>
     import { onMount } from 'svelte';
 
@@ -5,6 +6,14 @@
     let loading = $state(true);
     let error = $state(null);
     let selectedCategory = $state('');
+
+    let categories = $derived(Object.entries(photos));
+
+    let shootings = $derived(
+        photos[selectedCategory]?.shootings
+            ? Object.entries(photos[selectedCategory].shootings)
+            : []
+    );
 
     onMount(async () => {
         try {
@@ -16,13 +25,13 @@
 
             photos = await response.json();
 
-            const categories = Object.keys(photos);
+            const categorySlugs = Object.keys(photos);
 
-            if (categories.length > 0) {
-                selectedCategory = categories[0];
+            if (categorySlugs.length > 0) {
+                selectedCategory = categorySlugs[0];
             }
         } catch (e) {
-            console.error(e);
+            console.error('Failed to load photos:', e);
             error = e.message;
         } finally {
             loading = false;
@@ -32,6 +41,10 @@
 
 <svelte:head>
     <title>Photos — portfolio</title>
+    <meta
+        name="description"
+        content="Photography portfolio: events, concerts and individual shoots."
+    />
 </svelte:head>
 
 <main>
@@ -39,19 +52,28 @@
 
     {#if loading}
         <p>Loading...</p>
+
     {:else if error}
         <p>Error: {error}</p>
+
+    {:else if categories.length === 0}
+        <p>No photo categories found.</p>
+
     {:else}
-        {#each Object.entries(photos) as [slug, category]}
-            <button
-                class:active={selectedCategory === slug}
-                onclick={() => selectedCategory = slug}
-            >
-                {category.title}
-            </button>
-        {/each}
-        <div class="shootings">
-            {#each Object.entries(photos[selectedCategory]?.shootings ?? {}) as [slug, shooting]}
+        <nav class="categories" aria-label="Photo categories">
+            {#each categories as [slug, category]}
+                <button
+                    class:active={selectedCategory === slug}
+                    aria-pressed={selectedCategory === slug}
+                    onclick={() => selectedCategory = slug}
+                >
+                    {category.title}
+                </button>
+            {/each}
+        </nav>
+
+        <section class="shootings">
+            {#each shootings as [slug, shooting]}
                 <a
                     href={`/photos/${selectedCategory}/${slug}`}
                     class="shooting-card"
@@ -61,15 +83,27 @@
                             <img
                                 src={shooting.cover.url}
                                 alt={shooting.title}
+                                loading="lazy"
                             />
+                        </div>
+                    {:else}
+                        <div class="cover cover-empty">
+                            <span>No cover</span>
                         </div>
                     {/if}
 
                     <h2>{shooting.title}</h2>
-                    <span>{shooting.photos.length} photos</span>
+
+                    <span>
+                        {shooting.photos?.length ?? 0} photos
+                    </span>
                 </a>
             {/each}
-        </div>
+        </section>
+
+        {#if shootings.length === 0}
+            <p>No shootings in this category yet.</p>
+        {/if}
     {/if}
 </main>
 

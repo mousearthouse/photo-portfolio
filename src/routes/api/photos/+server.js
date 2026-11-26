@@ -24,7 +24,7 @@ export async function GET() {
         const result = {};
 
         for (const [categorySlug, category] of Object.entries(config)) {
-            const categoryPath = path.join(PHOTOS_DIR, categorySlug);
+            const categoryPath = path.join(PHOTOS_DIR, category.folder);
 
             result[categorySlug] = {
                 title: category.title,
