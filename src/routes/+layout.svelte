@@ -73,7 +73,7 @@
 		</picture>
 	</div> -->
 
-	<div class="fixed-element" class:light={headerTheme === 'light'} class:dark={headerTheme === 'dark'}>
+	<div class="fixed-element">
 		<div class="top">
 			<nav>
 				<a href="/">главная</a>
@@ -125,22 +125,9 @@
 		min-width: 100%;
 		min-height: 100vh;
 		pointer-events: none;
+		background-color: rgba(255, 255, 255, 0.5);
 
 		transition: color 0.25s ease;
-	}
-
-	.fixed-element.light {
-		color: #f5f5f5;
-	}
-
-	.fixed-element.dark {
-		color: #222222;
-	}
-
-	.fixed-element a {
-		color: inherit;
-		transition: color 0.25s ease;
-		pointer-events: auto;
 	}
 
 	.top {

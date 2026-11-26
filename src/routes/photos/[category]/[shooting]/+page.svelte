@@ -48,7 +48,7 @@
 </svelte:head>
 
 <main>
-    <nav data-header-theme="dark">
+    <nav>
         <a href="/photos">← all photos</a>
         <span>
             {data.category.title} / {data.shooting.title}
@@ -57,7 +57,7 @@
 
     <h1>{data.shooting.title}</h1>
     <div class="container">
-        <div class="gallery" data-header-theme="light">
+        <div class="gallery">
             {#each createRows(data.photos) as row}
                 <div
                     class="photo-row"

@@ -4,18 +4,18 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>print8creen | фотограф в Сибири</title>
+	<meta name="description" content="prin8creen portfolio" />
 </svelte:head>
 
-<section class="welcome" data-header-theme="dark">
+<section class="welcome">
 	<h1>
 		print8creen<br />photos
 	</h1>
 </section>
 <section class="text-block">
 	<img src="/profile_icon.png" alt="profile_icon"/>
-	<p>Меня зовут Полина, я фотограф в Сибири, специализируюсь на репортажной и портретной съемке. Снимаю мероприятия, концерты, индивидуальные и творческие проекты.</p>
+	<p>Меня зовут Полина, я фотограф в Сибири, специализируюсь на репортажной и портретной съемке. Снимаю мероприятия, концерты, индивидуальные и творческие проекты</p>
 </section>
 
 <style>
@@ -37,6 +37,7 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0 5vh;
+		margin: 5vh auto;
 
 		img {
 			height: 50%;
