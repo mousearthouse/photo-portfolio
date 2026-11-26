@@ -115,7 +115,7 @@
     }
 
     h1 {
-        font-family: 'Ms-sans-serif-1';
+        font-family: 'Ari';
         margin-bottom: 30px;
     }
     .container {

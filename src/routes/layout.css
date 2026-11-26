@@ -42,13 +42,13 @@ p {
 a {
 	font-family: 'Ari', sans-serif;
 	text-decoration: none;
-	color: rgb(180, 110, 110);
+	color: #4075a6;
 	font-size: 1.25rem;
 }
 
 a:hover {
 	text-decoration: underline;
-	color:#4075a6;
+	color:#214363;
 }
 
 h1 {

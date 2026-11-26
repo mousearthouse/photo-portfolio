@@ -15,34 +15,6 @@
             randomImage = await response.json();
         }
     });
-
-	let headerTheme = $state('dark');
-
-    onMount(() => {
-        const sections = document.querySelectorAll('[data-header-theme]');
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const visibleSections = [...sections]
-                    .filter(section => {
-                        const rect = section.getBoundingClientRect();
-                        return rect.top <= 100 && rect.bottom > 100;
-                    });
-
-                if (visibleSections.length > 0) {
-                    const activeSection = visibleSections[0];
-                    headerTheme = activeSection.dataset.headerTheme;
-                }
-            },
-            {
-                threshold: 0
-            }
-        );
-
-        sections.forEach(section => observer.observe(section));
-
-        return () => observer.disconnect();
-		});
 </script>
 
 <div class="app">
@@ -80,7 +52,9 @@
 				<a href="/about">обо мне</a>
 				<a href="/photos">портфолио</a>
 			</nav>
-
+			<div class="address">
+				<a>PrtSc</a>
+			</div>
 		</div>
 	</div>
 
@@ -123,7 +97,7 @@
 		flex-direction: column;
 		z-index: 90;
 		min-width: 100%;
-		min-height: 100vh;
+		height: 45px;
 		pointer-events: none;
 		background-color: rgba(255, 255, 255, 0.5);
 
