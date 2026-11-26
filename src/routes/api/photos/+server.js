@@ -54,7 +54,7 @@ export async function GET() {
 
                         return {
                             name: file,
-                            url: `/photos/${categorySlug}/${encodeURIComponent(shooting.folder)}/${encodeURIComponent(file)}`,
+                            url: `/media/${encodeURIComponent(category.folder)}/${encodeURIComponent(shooting.folder)}/${encodeURIComponent(file)}`,
                             width: metadata.width,
                             height: metadata.height
                         };
