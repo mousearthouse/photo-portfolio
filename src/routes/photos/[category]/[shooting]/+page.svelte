@@ -3,19 +3,24 @@
 
     function createRows(photos) {
         const rows = [];
+        let i = 0;
 
-        for (let i = 0; i < photos.length; i++) {
-            const photo = photos[i];
+        while (i < photos.length) {
+            const current = photos[i];
+            const isVertical = current.height > current.width;
 
-            if (
-                photo.width < photo.height &&
-                photos[i + 1]?.width < photos[i + 1]?.height
-            ) {
-                rows.push([photo, photos[i + 1]]);
-                i++;
-            } else {
-                rows.push([photo]);
+            if (isVertical) {
+                const next = photos[i + 1];
+
+                if (next && next.height > next.width) {
+                    rows.push([current, next]);
+                    i += 2;
+                    continue;
+                }
             }
+
+            rows.push([current]);
+            i++;
         }
 
         return rows;
@@ -27,7 +32,7 @@
 </svelte:head>
 
 <main>
-    <nav>
+    <nav data-header-theme="dark">
         <a href="/photos">← all photos</a>
         <span>
             {data.category.title} / {data.shooting.title}
@@ -36,15 +41,16 @@
 
     <h1>{data.shooting.title}</h1>
 
-    <div class="gallery">
+    <div class="gallery" data-header-theme="light">
         {#each createRows(data.photos) as row}
             <div
+                class="photo-row"
+                class:double={row.length === 2}
                 class:single={row.length === 1}
                 class:vertical-single={
                     row.length === 1 &&
                     row[0].width < row[0].height
                 }
-                class="photo-row"
             >
                 {#each row as photo}
                     <div
@@ -111,6 +117,15 @@
 
     .photo {
         min-width: 0;
+        flex: 1 1 0;
+    }
+
+    .photo-row.double .photo {
+        width: 50%;
+    }
+
+    .photo-row.single .photo {
+        width: 100%;
     }
 
     .photo img {
@@ -126,6 +141,10 @@
 
         .photo-row {
             gap: 6px;
+        }
+
+        .gallery {
+            width: 100%;
         }
 
         nav {

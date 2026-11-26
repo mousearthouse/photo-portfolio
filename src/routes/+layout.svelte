@@ -15,6 +15,34 @@
             randomImage = await response.json();
         }
     });
+
+	let headerTheme = $state('dark');
+
+    onMount(() => {
+        const sections = document.querySelectorAll('[data-header-theme]');
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visibleSections = [...sections]
+                    .filter(section => {
+                        const rect = section.getBoundingClientRect();
+                        return rect.top <= 100 && rect.bottom > 100;
+                    });
+
+                if (visibleSections.length > 0) {
+                    const activeSection = visibleSections[0];
+                    headerTheme = activeSection.dataset.headerTheme;
+                }
+            },
+            {
+                threshold: 0
+            }
+        );
+
+        sections.forEach(section => observer.observe(section));
+
+        return () => observer.disconnect();
+		});
 </script>
 
 <div class="app">
@@ -45,7 +73,7 @@
 		</picture>
 	</div> -->
 
-	<div class="fixed-element">
+	<div class="fixed-element" class:light={headerTheme === 'light'} class:dark={headerTheme === 'dark'}>
 		<div class="top">
 			<nav>
 				<a href="/">главная</a>
@@ -97,6 +125,22 @@
 		min-width: 100%;
 		min-height: 100vh;
 		pointer-events: none;
+
+		transition: color 0.25s ease;
+	}
+
+	.fixed-element.light {
+		color: #f5f5f5;
+	}
+
+	.fixed-element.dark {
+		color: #222222;
+	}
+
+	.fixed-element a {
+		color: inherit;
+		transition: color 0.25s ease;
+		pointer-events: auto;
 	}
 
 	.top {

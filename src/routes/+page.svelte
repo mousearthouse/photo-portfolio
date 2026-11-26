@@ -8,7 +8,7 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section class="welcome">
+<section class="welcome" data-header-theme="dark">
 	<h1>
 		print8creen<br />photos
 	</h1>
