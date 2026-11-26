@@ -3,24 +3,41 @@
 
     function createRows(photos) {
         const rows = [];
-        let i = 0;
+        const used = new Set();
 
-        while (i < photos.length) {
+        for (let i = 0; i < photos.length; i++) {
+            if (used.has(i)) continue;
+
             const current = photos[i];
             const isVertical = current.height > current.width;
 
-            if (isVertical) {
-                const next = photos[i + 1];
+            if (!isVertical) {
+                rows.push([current]);
+                used.add(i);
+                continue;
+            }
 
-                if (next && next.height > next.width) {
-                    rows.push([current, next]);
-                    i += 2;
-                    continue;
+            // Ищем следующую ещё не использованную вертикальную фотографию
+            let pairIndex = -1;
+
+            for (let j = i + 1; j < photos.length; j++) {
+                if (
+                    !used.has(j) &&
+                    photos[j].height > photos[j].width
+                ) {
+                    pairIndex = j;
+                    break;
                 }
             }
 
-            rows.push([current]);
-            i++;
+            if (pairIndex !== -1) {
+                rows.push([current, photos[pairIndex]]);
+                used.add(i);
+                used.add(pairIndex);
+            } else {
+                rows.push([current]);
+                used.add(i);
+            }
         }
 
         return rows;
