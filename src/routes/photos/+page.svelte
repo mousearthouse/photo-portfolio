@@ -1,41 +1,19 @@
 <script>
-    import { onMount } from 'svelte';
+    let { data } = $props();
 
-    let photos = $state({});
-    let loading = $state(true);
-    let error = $state(null);
-    let selectedCategory = $state('');
-
-    let categories = $derived(Object.entries(photos));
-
-    let shootings = $derived(
-        photos[selectedCategory]?.shootings
-            ? Object.entries(photos[selectedCategory].shootings)
-            : []
+    let selectedCategory = $state(
+        Object.keys(data.photos)[0] ?? ''
     );
 
-    onMount(async () => {
-        try {
-            const response = await fetch('/api/photos');
+    let categories = $derived(
+        Object.entries(data.photos)
+    );
 
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            photos = await response.json();
-
-            const categorySlugs = Object.keys(photos);
-
-            if (categorySlugs.length > 0) {
-                selectedCategory = categorySlugs[0];
-            }
-        } catch (e) {
-            console.error('Failed to load photos:', e);
-            error = e.message;
-        } finally {
-            loading = false;
-        }
-    });
+    let shootings = $derived(
+        data.photos[selectedCategory]?.shootings
+            ? Object.entries(data.photos[selectedCategory].shootings)
+            : []
+    );
 </script>
 
 <svelte:head>
@@ -49,13 +27,7 @@
 <main>
     <h1>photos</h1>
 
-    {#if loading}
-        <p>Loading...</p>
-
-    {:else if error}
-        <p>Error: {error}</p>
-
-    {:else if categories.length === 0}
+    {#if categories.length === 0}
         <p>No photo categories found.</p>
 
     {:else}
