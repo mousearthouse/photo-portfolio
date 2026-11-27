@@ -3,18 +3,18 @@
 </script>
 
 <svelte:head>
-	<title>About me</title>
+	<title>обо мне | print8creen</title>
 	<meta name="description" content="About me" />
 </svelte:head>
 
 <div class="text-column">
-	<h1>About me</h1>
+	<h1>Обо мне</h1>
 
 	<p>
 		Привет! Меня зовут Полина, я фотограф - уже несколько лет снимаю события и людей. Людей я очень люблю, и для меня фотография - способ оставить ваш и свой след в мире. Мой ник - название кнопки скриншота на компе, потому что истории со мной остаются не только в памяти. На личных фотосессиях мы с вами классно проведем время на съемке и создадим такие снимки, что вы еще долго будете думать "ну ничего себе, это я"!
 	</p>
 
-	<p>Я есть в соцсетях:</p>
+	<p>Я и мои работы есть в соцсетях:</p>
 	<a href="https://www.instagram.com/print8creen/">instagram</a>
 	<a href="https://vk.com/print8creen">vk</a>
 	<a href="https://pinterest.com/print8creen">pinterest</a>
@@ -34,6 +34,6 @@
 	}
 
 	h1 {
-		font-family: 'Ms-sans-serif-1'
+		font-family: 'Ari'
 	}
 </style>

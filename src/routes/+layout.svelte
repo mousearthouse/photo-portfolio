@@ -49,8 +49,9 @@
 		<div class="top">
 			<nav>
 				<a href="/">главная</a>
-				<a href="/about">обо мне</a>
+				<a href="/services">условия</a>
 				<a href="/photos">портфолио</a>
+				<a href="/about">обо мне</a>
 			</nav>
 			<div class="address">
 				<a>PrtSc</a>
@@ -97,7 +98,7 @@
 		flex-direction: column;
 		z-index: 90;
 		min-width: 100%;
-		height: 45px;
+		height: 6vh;
 		pointer-events: none;
 		background-color: rgba(255, 255, 255, 0.5);
 
@@ -121,12 +122,11 @@
 	}
 
 	.address {
-		position: absolute;
-		display: flex;
-		top: 15%;
-		left: 4vw;
+		position: fixed;
+		top: 2vh;
+		left: 3vw;
 		a {
-			color: white;
+			color: rgb(190, 120, 126);
 			font-size: 1.5rem;
 		}
 	}
@@ -140,11 +140,10 @@
 	} */
 
 	nav {
-		position: absolute;
-		display: flex;
+		position: fixed;
 		top: 2vh;
 		right: 3vw;
-		gap: 2vw;
+		gap: 4vw;
 	}
 
 	.middle {
@@ -188,16 +187,14 @@
 			background-image: url('/bgcenter-mobile.png');
 		}
 		.address {
-			top: 10%;
-			left: 7vw;
+			left: 3vw;
 			a {
 			font-size: 1rem;
 			}
 		}
 
 		nav {
-			top: 45%;
-			left: 3vw;
+			right: 3vw;
 			gap: 2vw;
 			a {
 				font-size: 1rem;

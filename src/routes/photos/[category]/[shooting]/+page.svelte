@@ -44,12 +44,12 @@
 </script>
 
 <svelte:head>
-    <title>{data.shooting.title} — portfolio</title>
+    <title>{data.shooting.title} | print8creen</title>
 </svelte:head>
 
 <main>
     <nav>
-        <a href="/photos">← all photos</a>
+        <a href="/photos">← все фото</a>
         <span>
             {data.category.title} / {data.shooting.title}
         </span>

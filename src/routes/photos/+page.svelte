@@ -17,15 +17,15 @@
 </script>
 
 <svelte:head>
-    <title>Photos — portfolio</title>
+    <title>фото | print8creen</title>
     <meta
         name="description"
-        content="Photography portfolio: events, concerts and individual shoots."
+        content="Photography portfolio: events, concerts and individual shoots"
     />
 </svelte:head>
 
 <main>
-    <h1>photos</h1>
+    <h1>Портфолио</h1>
 
     {#if categories.length === 0}
         <p>No photo categories found.</p>
@@ -103,11 +103,11 @@
         padding: 10px 20px;
         cursor: pointer;
         border: none;
-        font-family: sans-serif;
+        font-family: 'Ari';
     }
 
     button.active {
-        background: rgb(64, 115, 255);
+        background: #4075a6;
         color: white;
     }
 
@@ -178,6 +178,11 @@
     @media (max-width: 700px) {
         main {
             padding: 15px;
+            width: 80%;
+        }
+
+        .categories {
+            width: 80%
         }
 
         .shootings {
